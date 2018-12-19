@@ -2,6 +2,8 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text, Button, Image } from 'react-native-elements';
 import { ExpoLinksView } from '@expo/samples';
+import { CardList } from '../components/CardList';
+import * as actions from '../actions'
 
 export default class AlbumScreen extends React.Component {
     static navigationOptions = {
@@ -11,51 +13,21 @@ export default class AlbumScreen extends React.Component {
     constructor() {
         super();
         this.state = {
-            albums: [
-                {
-                    title: 'Meteora',
-                    image: 'https://i.pinimg.com/originals/c1/db/04/c1db04e854d022ea38b504e7f2a38025.jpg'
-                },
-                {
-                    title: 'Meteora',
-                    image: 'https://i.pinimg.com/originals/c1/db/04/c1db04e854d022ea38b504e7f2a38025.jpg'
-                },
-                {
-                    title: 'Meteora',
-                    image: 'https://i.pinimg.com/originals/c1/db/04/c1db04e854d022ea38b504e7f2a38025.jpg'
-                },
-                {
-                    title: 'Meteora',
-                    image: 'https://i.pinimg.com/originals/c1/db/04/c1db04e854d022ea38b504e7f2a38025.jpg'
-                },
-            ]
-        }
+            albums:[]
+        };
+        actions.searchTracks('eminem').then((albums) => this.setState({ albums }));
     }
-    renderAlbums() {
-        const { albums } = this.state;
 
-        return albums.map((album, index) => {
-            return (
-                <Card
-                    title={album.title}
-                    image={{ uri: album.image }}
-                >
-                    <Button
-                        icon={{ name: 'code' }}
-                        backgroundColor='#03A9F4'
-                        buttonStyle={{ borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0 }}
-                        title='VIEW NOW' />
-                </Card>
-            )
-        })
-
-    }
 
     render() {
-
+        const { albums } = this.state;
         return (
             <ScrollView style={styles.container}>
-                {this.renderAlbums()}
+                <CardList data={albums}
+                    imageKey={'cover_big'}
+                    titleKey={'title'}
+                    buttonText="See the details"
+                />
             </ScrollView>
         );
     }
