@@ -1,11 +1,12 @@
 import React from 'react';
+import { View } from 'react-native';
 import { Card, Text, Button, Image } from 'react-native-elements';
 
 export class CardList extends React.Component {
 
 
     renderAlbums() {
-        const { data ,imageKey,titleKey,buttonText} = this.props;
+        const { data, imageKey, titleKey, buttonText } = this.props;
         return data.map((item, index) => {
             return (
                 <Card
@@ -24,6 +25,13 @@ export class CardList extends React.Component {
     }
 
     render() {
-        return this.renderAlbums()
+        const { data } = this.props;
+
+        if (data && data.length > 0) {
+            return this.renderAlbums()
+        } else {
+            return <View><Text>Loading Data...</Text></View>
+        }
+
     }
 }
