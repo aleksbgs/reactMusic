@@ -14,7 +14,7 @@ export class CardList extends React.Component {
                     title={item[titleKey]}
                     image={{ uri: item[imageKey] }}
                 >
-                    {bottomView()}
+                    {bottomView(item)}
                 </Card>
             )
         })

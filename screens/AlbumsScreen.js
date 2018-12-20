@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Text, Button, Image,Icon } from 'react-native-elements';
-import { ExpoLinksView } from '@expo/samples';
+import { Card, Text, Button, Image, Icon } from 'react-native-elements';
 import { CardList } from '../components/CardList';
 import * as actions from '../actions'
 import { SearchText } from '../components/SearchText';
@@ -28,7 +27,7 @@ export default class AlbumScreen extends React.Component {
             .catch(err => this.setState({ albums: [], isFetching: false }))
     }
 
-    renderBottomNavigation() {
+    renderBottomNavigation(album) {
         return (
             <View style={styles.albumMenu}>
                 <Icon onPress={() => { }}
@@ -38,7 +37,7 @@ export default class AlbumScreen extends React.Component {
                     color="#f50"
                     size={30}
                 />
-                <Icon onPress={() => { }}
+                <Icon onPress={() => { this.props.navigation.navigate('AlbumDetail', {album}) }}
                     raised
                     name='info'
                     type='font-awesome'
@@ -89,8 +88,8 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         backgroundColor: '#fff',
     },
-    albumMenu:{
-        flexDirection:'row',
-        justifyContent:'space-between'
+    albumMenu: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 });
