@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Text, Button, Image } from 'react-native-elements';
+import { Card, Text, Button, Image,Icon } from 'react-native-elements';
 import { ExpoLinksView } from '@expo/samples';
 import { CardList } from '../components/CardList';
 import * as actions from '../actions'
@@ -18,6 +18,7 @@ export default class AlbumScreen extends React.Component {
             isFetching: false
         };
         this.searchTracks = this.searchTracks.bind(this);
+        this.renderBottomNavigation = this.renderBottomNavigation.bind(this);
     }
     searchTracks = (artist) => {
         this.setState({ isFetching: true, albums: [] });
@@ -26,6 +27,36 @@ export default class AlbumScreen extends React.Component {
             .then((albums) => this.setState({ albums, isFetching: false }))
             .catch(err => this.setState({ albums: [], isFetching: false }))
     }
+
+    renderBottomNavigation() {
+        return (
+            <View style={styles.albumMenu}>
+                <Icon onPress={() => { }}
+                    raised
+                    name='play'
+                    type='font-awesome'
+                    color="#f50"
+                    size={30}
+                />
+                <Icon onPress={() => { }}
+                    raised
+                    name='info'
+                    type='font-awesome'
+                    color="#f50"
+                    size={30}
+                />
+                <Icon onPress={() => { }}
+                    raised
+                    name='thumbs-up'
+                    type='font-awesome'
+                    color="#f50"
+                    size={30}
+                />
+
+            </View>
+        )
+    }
+
     renderAlbumView() {
         const { albums, isFetching } = this.state;
         return (
@@ -35,7 +66,8 @@ export default class AlbumScreen extends React.Component {
                     <CardList data={albums}
                         imageKey={'cover_big'}
                         titleKey={'title'}
-                        buttonText="See the details">
+                        buttonText="See the details"
+                        bottomView={this.renderBottomNavigation}>
                     </CardList>
                 }
                 {albums.length === 0 && !isFetching &&
@@ -57,4 +89,8 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         backgroundColor: '#fff',
     },
+    albumMenu:{
+        flexDirection:'row',
+        justifyContent:'space-between'
+    }
 });

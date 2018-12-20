@@ -6,7 +6,7 @@ export class CardList extends React.Component {
 
 
     renderAlbums() {
-        const { data, imageKey, titleKey, buttonText } = this.props;
+        const { data, imageKey, titleKey, buttonText, bottomView } = this.props;
         return data.map((item, index) => {
             return (
                 <Card
@@ -14,11 +14,7 @@ export class CardList extends React.Component {
                     title={item[titleKey]}
                     image={{ uri: item[imageKey] }}
                 >
-                    <Button
-                        icon={{ name: 'code' }}
-                        backgroundColor='#03A9F4'
-                        buttonStyle={{ borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0 }}
-                        title={buttonText} />
+                    {bottomView()}
                 </Card>
             )
         })
