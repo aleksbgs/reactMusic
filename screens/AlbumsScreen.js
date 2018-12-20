@@ -4,6 +4,7 @@ import { Card, Text, Button, Image } from 'react-native-elements';
 import { ExpoLinksView } from '@expo/samples';
 import { CardList } from '../components/CardList';
 import * as actions from '../actions'
+import { SearchText } from '../components/SearchText';
 
 export default class AlbumScreen extends React.Component {
     static navigationOptions = {
@@ -13,23 +14,40 @@ export default class AlbumScreen extends React.Component {
     constructor() {
         super();
         this.state = {
-            albums:null
+            albums: [],
+            isFetching: false
         };
-        actions.searchTracks('eminem').then((albums) => this.setState({ albums }));
+        this.searchTracks = this.searchTracks.bind(this);
     }
+    searchTracks = (artist) => {
+        this.setState({ isFetching: true, albums: [] });
 
-
-    render() {
-        const { albums } = this.state;
+        actions.searchTracks(artist)
+            .then((albums) => this.setState({ albums, isFetching: false }))
+            .catch(err => this.setState({ albums: [], isFetching: false }))
+    }
+    renderAlbumView() {
+        const { albums, isFetching } = this.state;
         return (
             <ScrollView style={styles.container}>
-                <CardList data={albums}
-                    imageKey={'cover_big'}
-                    titleKey={'title'}
-                    buttonText="See the details"
-                />
+                <SearchText submitSearch={this.searchTracks} />
+                {albums.length > 0 && !isFetching &&
+                    <CardList data={albums}
+                        imageKey={'cover_big'}
+                        titleKey={'title'}
+                        buttonText="See the details">
+                    </CardList>
+                }
+                {albums.length === 0 && !isFetching &&
+                    <Text>Loading albums...</Text>
+                }
             </ScrollView>
-        );
+        )
+    }
+
+    render() {
+
+        return this.renderAlbumView();
     }
 }
 
