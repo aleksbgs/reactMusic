@@ -16,3 +16,8 @@ export const searchTracks = singerName => {
         return uniqueAlbums;
     })
 }
+export const getAlbumTracks = albumId => {
+
+    return axiosInstance.get(`album/${albumId}`).then(response => response.data.tracks.data);
+
+}
