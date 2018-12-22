@@ -8,6 +8,7 @@ import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AlbumScreen from '../screens/AlbumsScreen';
 import AlbumDetailScreen from '../screens/AlbumDetailsScreen';
+import StorageScreen from '../screens/StorageScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -45,6 +46,7 @@ LinksStack.navigationOptions = {
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
+  Storage :StorageScreen
 });
 
 SettingsStack.navigationOptions = {
