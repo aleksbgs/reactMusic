@@ -24,61 +24,58 @@ export default class FavoriteScreen extends React.Component {
     const favoriteAlbums = await actions.retrieveData('favoriteAlbums');
 
     if (favoriteAlbums) {
-      this.setState({favoriteAlbums});
+      this.setState({ favoriteAlbums });
     }
   }
-
-  async deleteAlbum(albumId) {
-    const { favoriteAlbums } = this.state;
-
-    delete favoriteAlbums[albumId];
-
-    const success = await actions.storeData('favoriteAlbums', favoriteAlbums);
-
-    if (success) {
-      this.setState({favoriteAlbums});
-    }
-  }
-
   renderFavoriteTracks(tracks) {
     if (tracks) {
+
       return _.map(tracks, (track, id) => {
         return (
           <ListItem
             key={id}
             title={track.title}
-            leftIcon={{name: 'play-arrow'}}
+            leftIcon={{ name: 'play-arrow' }}
             rightIcon={
               <Icon
                 raised
                 name='music'
                 type='font-awesome'
                 color='#f50'
-                onPress={() => Linking.openURL(track.preview)}/>
-            } />
+                onPress={() => Linking.openURL(track.preview)}>
+              </Icon>
+            }>
+          </ListItem>
         )
       })
+
+    }
+
+  }
+  async deleteAlbum(albumId) {
+    const { favoriteAlbums } = this.state;
+    delete favoriteAlbums[albumId];
+    const success = await actions.storeData('favoriteAlbums', favoriteAlbums);
+    if (success) {
+      this.setState({ favoriteAlbums })
     }
   }
-
   renderFavoriteAlbums() {
     const { favoriteAlbums } = this.state;
-
     if (favoriteAlbums) {
       return _.map(favoriteAlbums, (album, id) => {
         return (
           <View key={id}>
             <Card
               title={album.title}>
-                <Button
-                  title='Delete Album'
-                  raised
-                  backgroundColor='#f50'
-                  name='trash'
-                  onPress={() => this.deleteAlbum(album.id)}
+              <Button
+                title='Delete Album'
+                raised
+                backgroundColor='#f50'
+                name='trash'
+                onPress={() => { this.deleteAlbum(album.id) }}
               />
-              { this.renderFavoriteTracks(album.tracks)}
-
+              {this.renderFavoriteTracks(album.tracks)}
             </Card>
           </View>
         )
