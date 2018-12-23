@@ -21,14 +21,14 @@ export default class StorageScreen extends React.Component {
         const data = {
             value: 'Some testing data!'
         }
-        const value = await actions.storeData('someKey', data);
+        const value = await actions.storeData('favoriteAlbums', data);
         if (value) {
             console.log(value)
         }
 
     }
     async retreiveData() {
-        const data = await actions.retrieveData('someKey');
+        const data = await actions.retrieveData('favoriteAlbums');
         if (data) {
             this.setState({
                 value: data.value
