@@ -1,73 +1,110 @@
 import React from 'react';
-import { ScrollView, StyleSheet} from 'react-native';
-import { List, ListItem, Text, Button ,Card} from 'react-native-elements';
+import { ScrollView, StyleSheet, View, Linking } from 'react-native';
+import { Card, Button, Text, List, ListItem, Icon } from 'react-native-elements';
+
 import * as actions from '../actions';
 import _ from 'lodash';
 
-
 export default class FavoriteScreen extends React.Component {
-    static navigationOptions = {
-        title: 'FavoriteAlbums',
-    };
+  static navigationOptions = {
+    title: 'Favorite Albums',
+  };
 
-    constructor() {
-        super();
-        this.state = {
-            favoriteAlbums: undefined
-        }
-        this.getFavoritedAlbums();
-    }
-    async getFavoritedAlbums() {
-        const favoriteAlbums = await actions.retrieveData('favoritedAlbums');
-        if (favoriteAlbums) {
-            this.setState({ favoriteAlbums });
-        }
+  constructor() {
+    super();
+
+    this.state = {
+      favoriteAlbums: undefined
     }
 
-    renderFavoriteAlbums() {
-        const { favoriteAlbums } = this.state;
+    this.getFavoriteAlbums();
+  }
 
-        if (favoriteAlbums) {
-            return _.map(favoriteAlbums, (album, id) => {
-                return (
-                    <View>
-                        <Card
-                            key={id}
-                            title={album.title}
-                        >
-                            <Button
-                                title='Delete Album'
-                                raised
-                                backgroundColor='#f50'
-                                name='trash'
-                                onPress={() => { }}
-                            >
+  async getFavoriteAlbums() {
+    const favoriteAlbums = await actions.retrieveData('favoriteAlbums');
 
-                            </Button>
-
-                        </Card>
-                    </View>
-                )
-
-            })
-        }
+    if (favoriteAlbums) {
+      this.setState({favoriteAlbums});
     }
+  }
 
-    render() {
+  async deleteAlbum(albumId) {
+    const { favoriteAlbums } = this.state;
+
+    delete favoriteAlbums[albumId];
+
+    const success = await actions.storeData('favoriteAlbums', favoriteAlbums);
+
+    if (success) {
+      this.setState({favoriteAlbums});
+    }
+  }
+
+  renderFavoriteTracks(tracks) {
+    if (tracks) {
+      return _.map(tracks, (track, id) => {
         return (
-            <ScrollView style={styles.container}>
-                <List>
-                    {this.renderFavoriteAlbums()}
-                </List>
-            </ScrollView>
-        );
+          <ListItem
+            key={id}
+            title={track.title}
+            leftIcon={{name: 'play-arrow'}}
+            rightIcon={
+              <Icon
+                raised
+                name='music'
+                type='font-awesome'
+                color='#f50'
+                onPress={() => Linking.openURL(track.preview)}/>
+            } />
+        )
+      })
     }
+  }
+
+  renderFavoriteAlbums() {
+    const { favoriteAlbums } = this.state;
+
+    if (favoriteAlbums) {
+      return _.map(favoriteAlbums, (album, id) => {
+        return (
+          <View key={id}>
+            <Card
+              title={album.title}>
+                <Button
+                  title='Delete Album'
+                  raised
+                  backgroundColor='#f50'
+                  name='trash'
+                  onPress={() => this.deleteAlbum(album.id)}
+              />
+              { this.renderFavoriteTracks(album.tracks)}
+
+            </Card>
+          </View>
+        )
+      })
+    }
+  }
+
+  render() {
+    return (
+      <ScrollView style={styles.container}>
+        <List containerStyle={styles.listContainer}>
+          {this.renderFavoriteAlbums()}
+        </List>
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 15,
-        backgroundColor: '#fff',
-    },
+  container: {
+    flex: 1,
+    paddingTop: 15,
+    backgroundColor: '#fff',
+  },
+  listContainer: {
+    backgroundColor: '#eaeaea'
+  }
+
 });
